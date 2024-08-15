@@ -21,8 +21,16 @@ In the future we hope to provide a plethora of flags to tune the document to you
 
 # Usage
 
+Providing file name:
+
 ```sh
 norg-fmt <file> <options>
+```
+
+Piping the content to be formatted:
+
+```sh
+cat <file> | norg-fmt <options>
 ```
 
 Currently `norg-fmt` is capable of formatting one file at a time.

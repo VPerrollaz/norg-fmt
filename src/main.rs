@@ -9,6 +9,7 @@ mod inline;
 #[derive(ClapParser)]
 struct NorgFmt {
     /// The path of the file to format.
+    /// Will read from stdin if absent.
     file: Option<PathBuf>,
 
     /// (todo) Verify the output of the AST after the formatting.
