@@ -1,6 +1,6 @@
 use clap::Parser as ClapParser;
 use eyre::Result;
-use std::path::PathBuf;
+use std::{io::Read, path::PathBuf};
 use tree_sitter::{Node, Parser};
 
 mod block;
@@ -9,7 +9,7 @@ mod inline;
 #[derive(ClapParser)]
 struct NorgFmt {
     /// The path of the file to format.
-    file: PathBuf,
+    file: Option<PathBuf>,
 
     /// (todo) Verify the output of the AST after the formatting.
     #[arg(long)]
@@ -113,8 +113,14 @@ fn main() -> Result<()> {
         line_length: cli.line_length.unwrap_or(80),
     };
 
-    let file = cli.file;
-    let content = String::from_utf8(std::fs::read(file)?)?;
+    let content = match cli.file {
+        Some(file) => String::from_utf8(std::fs::read(file)?)?,
+        None => {
+            let mut content = String::new();
+            std::io::stdin().read_to_string(&mut content)?;
+            content
+        }
+    };
 
     let mut parser = Parser::new();
     parser.set_language(tree_sitter_norg::language())?;
